@@ -31,7 +31,7 @@ trait Access
      */
     public function hasAccess($permission)
     {
-        if (!in_array($permission, $this->access)) {
+        if (! in_array($permission, $this->access)) {
             return false;
         }
 
@@ -66,7 +66,7 @@ trait Access
     public function hasAccessToAll($permission_array)
     {
         foreach ($permission_array as $key => $permission) {
-            if (!in_array($permission, $this->access)) {
+            if (! in_array($permission, $this->access)) {
                 return false;
             }
         }
@@ -80,11 +80,11 @@ trait Access
      * @param  [string] Permission.
      * @param string $permission
      *
-     * @return boolean|null
+     * @return bool|null
      */
     public function hasAccessOrFail($permission)
     {
-        if (!in_array($permission, $this->access)) {
+        if (! in_array($permission, $this->access)) {
             abort(403, trans('backpack::crud.unauthorized_access'));
         }
     }

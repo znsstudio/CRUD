@@ -42,7 +42,7 @@ trait Buttons
 
     public function showButtons()
     {
-        return !empty($this->buttons) && !(count($this->buttons) == 1 && array_key_exists('add', $this->buttons));
+        return ! empty($this->buttons) && ! (count($this->buttons) == 1 && array_key_exists('add', $this->buttons));
     }
 
     public function initButtons()

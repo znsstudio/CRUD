@@ -32,7 +32,7 @@ trait Update
      * Get all fields needed for the EDIT ENTRY form.
      *
      * @param  [integer] The id of the entry that is being edited.
-     * @param integer $id
+     * @param int $id
      *
      * @return [array] The fields with attributes, fake attributes and values.
      */
@@ -43,7 +43,7 @@ trait Update
 
         foreach ($fields as $k => $field) {
             // set the value
-            if (!isset($fields[$k]['value'])) {
+            if (! isset($fields[$k]['value'])) {
                 if (isset($field['subfields'])) {
                     $fields[$k]['value'] = [];
                     foreach ($field['subfields'] as $key => $subfield) {

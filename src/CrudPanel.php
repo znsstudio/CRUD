@@ -72,7 +72,7 @@ class CrudPanel
      */
     public function setModel($model_namespace)
     {
-        if (!class_exists($model_namespace)) {
+        if (! class_exists($model_namespace)) {
             throw new \Exception('This model does not exist.', 404);
         }
 
@@ -116,7 +116,7 @@ class CrudPanel
     {
         $complete_route = $route.'.index';
 
-        if (!\Route::has($complete_route)) {
+        if (! \Route::has($complete_route)) {
             throw new \Exception('There are no routes for this route name.', 404);
         }
 
@@ -166,7 +166,7 @@ class CrudPanel
      */
     public function getFirstOfItsTypeInArray($type, $array)
     {
-        return array_first($array, function($key, $item) use ($type) {
+        return array_first($array, function ($key, $item) use ($type) {
             return $item['type'] == $type;
         });
     }
@@ -183,8 +183,8 @@ class CrudPanel
 
     public function sync($type, $fields, $attributes)
     {
-        if (!empty($this->{$type})) {
-            $this->{$type} = array_map(function($field) use ($fields, $attributes) {
+        if (! empty($this->{$type})) {
+            $this->{$type} = array_map(function ($field) use ($fields, $attributes) {
                 if (in_array($field['name'], (array) $fields)) {
                     $field = array_merge($field, $attributes);
                 }
@@ -210,8 +210,8 @@ class CrudPanel
                 }
             }
 
-            return $this->{$items} = array_merge($elements, array_filter($this->{$items}, function($item) use ($items) {
-                return !in_array($item['name'], $this->sort[$items]);
+            return $this->{$items} = array_merge($elements, array_filter($this->{$items}, function ($item) use ($items) {
+                return ! in_array($item['name'], $this->sort[$items]);
             }));
         }
 
