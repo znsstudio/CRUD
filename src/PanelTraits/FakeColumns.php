@@ -28,20 +28,20 @@ trait FakeColumns
             if (isset($fields[$k]['fake']) && $fields[$k]['fake'] == true) {
                 // add it to the request in its appropriate variable - the one defined, if defined
                 if (isset($fields[$k]['store_in'])) {
-                    if (! in_array($fields[$k]['store_in'], $fake_field_columns_to_encode, true)) {
+                    if (!in_array($fields[$k]['store_in'], $fake_field_columns_to_encode, true)) {
                         array_push($fake_field_columns_to_encode, $fields[$k]['store_in']);
                     }
                 } else {
                     //otherwise in the one defined in the $crud variable
 
-                    if (! in_array('extras', $fake_field_columns_to_encode, true)) {
+                    if (!in_array('extras', $fake_field_columns_to_encode, true)) {
                         array_push($fake_field_columns_to_encode, 'extras');
                     }
                 }
             }
         }
 
-        if (! count($fake_field_columns_to_encode)) {
+        if (!count($fake_field_columns_to_encode)) {
             return ['extras'];
         }
 

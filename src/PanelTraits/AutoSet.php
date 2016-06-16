@@ -16,7 +16,7 @@ trait AutoSet
     {
         $this->getDbColumnTypes();
 
-        array_map(function ($field) {
+        array_map(function($field) {
             // $this->labels[$field] = $this->makeLabel($field);
 
             $new_field = [
@@ -30,7 +30,7 @@ trait AutoSet
             $this->create_fields[] = $new_field;
             $this->update_fields[] = $new_field;
 
-            if (! in_array($field, $this->model->getHidden())) {
+            if (!in_array($field, $this->model->getHidden())) {
                 $this->columns[] = [
                                     'name'  => $field,
                                     'label' => ucfirst($field),
@@ -63,7 +63,7 @@ trait AutoSet
      */
     public function getFieldTypeFromDbColumnType($field)
     {
-        if (! array_key_exists($field, $this->field_types)) {
+        if (!array_key_exists($field, $this->field_types)) {
             return 'text';
         }
 
@@ -144,7 +144,7 @@ trait AutoSet
         $columns = \Schema::getColumnListing($this->model->getTable());
         $fillable = $this->model->getFillable();
 
-        if (! empty($fillable)) {
+        if (!empty($fillable)) {
             $columns = array_intersect($columns, $fillable);
         }
 

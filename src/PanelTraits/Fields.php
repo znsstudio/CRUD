@@ -11,8 +11,6 @@ trait Fields
     /**
      * Add a field to the create/update form or both.
      *
-     * @param [string] $name    Field name (the column name in the db in most cases)
-     * @param [array]  $options Field-type-specific information.
      * @param string   $form    The form to add the field to (create/update/both)
      */
     public function addField($field, $form = 'both')
@@ -26,12 +24,12 @@ trait Fields
         }
 
         // if the label is missing, we should set it
-        if (! isset($complete_field_array['label'])) {
+        if (!isset($complete_field_array['label'])) {
             $complete_field_array['label'] = ucfirst($complete_field_array['name']);
         }
 
         // if the field type is missing, we should set it
-        if (! isset($complete_field_array['type'])) {
+        if (!isset($complete_field_array['type'])) {
             $complete_field_array['type'] = $this->getFieldTypeFromDbColumnType($complete_field_array['name']);
         }
 
@@ -93,7 +91,7 @@ trait Fields
      */
     public function removeFields($array_of_names, $form = 'both')
     {
-        if (! empty($array_of_names)) {
+        if (!empty($array_of_names)) {
             foreach ($array_of_names as $name) {
                 $this->removeField($name, $form);
             }

@@ -14,6 +14,7 @@ trait Delete
      * Delete a row from the database.
      *
      * @param  [int] The id of the item to be deleted.
+     * @param integer $id
      *
      * @return [bool] Deletion confirmation.
      *

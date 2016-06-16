@@ -54,7 +54,7 @@ trait Columns
     public function addColumn($column)
     {
         // if a string was passed, not an array, change it to an array
-        if (! is_array($column)) {
+        if (!is_array($column)) {
             $column = ['name' => $column];
         }
 
@@ -105,7 +105,7 @@ trait Columns
      */
     public function addDefaultLabel($array)
     {
-        if (! array_key_exists('label', (array) $array) && array_key_exists('name', (array) $array)) {
+        if (!array_key_exists('label', (array) $array) && array_key_exists('name', (array) $array)) {
             $array = array_merge(['label' => ucfirst($this->makeLabel($array['name']))], $array);
 
             return $array;
@@ -134,10 +134,13 @@ trait Columns
         return $this->removeColumns([$column]);
     }
 
+    /**
+     * @param string $entity
+     */
     public function remove($entity, $fields)
     {
-        return array_values(array_filter($this->{$entity}, function ($field) use ($fields) {
-            return ! in_array($field['name'], (array) $fields);
+        return array_values(array_filter($this->{$entity}, function($field) use ($fields) {
+            return !in_array($field['name'], (array) $fields);
         }));
     }
 
