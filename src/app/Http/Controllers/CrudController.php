@@ -256,8 +256,6 @@ class CrudController extends BaseController
         $this->data['entry'] = array_except($this->data['entry'], 'id');
         $this->data['crud'] = $this->crud;
 
-        dd($this->crud->model);
-
         // insert item in the db
         $item = $this->crud->create($this->data['entry']);
 
