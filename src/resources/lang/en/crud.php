@@ -35,6 +35,7 @@ return [
     'list'                      => 'List',
     'actions'                   => 'Actions',
     'preview'                   => 'Preview',
+    'duplicate'                 => 'Duplicate',
     'delete'                    => 'Delete',
     'admin'                     => 'Admin',
     'details_row'               => 'This is the details row. Modify as you please.',

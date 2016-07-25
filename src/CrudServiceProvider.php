@@ -86,6 +86,7 @@ class CrudServiceProvider extends ServiceProvider
         Route::get($name.'/reorder', $controller.'@reorder');
         Route::post($name.'/reorder', $controller.'@saveReorder');
         Route::get($name.'/{id}/details', $controller.'@showDetailsRow');
+        Route::get($name.'/{id}/duplicate', $controller.'@duplicate');
         Route::get($name.'/{id}/translate/{lang}', $controller.'@translateItem');
         Route::resource($name, $controller, $options);
     }

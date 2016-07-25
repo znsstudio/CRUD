@@ -238,4 +238,33 @@ class CrudController extends BaseController
         // load the view from /resources/views/vendor/backpack/crud/ if it exists, otherwise load the one in the package
         return view('crud::details_row', $this->data);
     }
+
+
+    /**
+     * Duplicate (also called clone or copy) an entry.
+     *
+     * @param int $id
+     *
+     * @return Response
+     */
+    public function duplicate($id)
+    {
+        $this->crud->hasAccessOrFail('duplicate');
+
+        // get the info for that entry
+        $this->data['entry'] = $this->crud->getEntry($id)->toArray();
+        $this->data['entry'] = array_except($this->data['entry'], 'id');
+        $this->data['crud'] = $this->crud;
+
+        dd($this->crud->model);
+
+        // insert item in the db
+        $item = $this->crud->create($this->data['entry']);
+
+        // show a success message
+        \Alert::success(trans('backpack::crud.insert_success'))->flash();
+
+        // load the view from /resources/views/vendor/backpack/crud/ if it exists, otherwise load the one in the package
+        return \Redirect::back();
+    }
 }

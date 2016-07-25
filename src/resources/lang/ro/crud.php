@@ -30,12 +30,16 @@ return [
     'save'                 => 'Salvează',
 
     // CRUD table view
-    'all'                  => 'Toate ',
-    'in_the_database'      => 'din baza de date',
-    'list'                 => 'Listă',
-    'actions'              => 'Operațiuni',
-    'preview'              => 'Previzualizează',
-    'delete'               => 'Șterge',
+    'all'                       => 'Toate ',
+    'in_the_database'           => 'din baza de date',
+    'list'                      => 'Listă',
+    'actions'                   => 'Operațiuni',
+    'preview'                   => 'Previzualizează',
+    'duplicate'                 => 'Duplică',
+    'delete'                    => 'Șterge',
+    'admin'                     => 'Administrator',
+    'details_row'               => 'Acesta este un rând cu detalii. Modifică-l cum dorești.',
+    'details_row_loading_error' => 'Am întâmpinat o eroare la încărcarea detaliilor. Te rugăm să încerci din nou.',
 
         // Confirmation messages and bubbles
         'delete_confirm'                              => 'Ești sigur că vrei să ștergi această intrare?',
@@ -85,4 +89,13 @@ return [
     'reorder_success_message'      => 'Ordinea a fost salvată.',
     'reorder_error_title'          => 'Eroare',
     'reorder_error_message'        => 'Ordinea nu a fost salvată.',
+
+        // Fields
+    'browse_uploads' => 'Răsfoiește',
+    'clear' => 'Șterge',
+    'page_link' => 'Link',
+    'page_link_placeholder' => 'http://example.com/your-desired-page',
+    'internal_link' => 'Link intern',
+    'internal_link_placeholder' => 'Slug intern. De ex: \'admin/page\' (fără ghilimele) pentru \':url\'',
+    'external_link' => 'Link extern',
 ];

@@ -35,6 +35,7 @@ return [
     'list'                      => 'Lista',
     'actions'                   => 'Azioni',
     'preview'                   => 'Anteprima',
+    'duplicate'                 => 'Duplicare',
     'delete'                    => 'Elimina',
     'admin'                     => 'Amministrazione',
     'details_row'               => 'Questa è la riga dei dettagli. Modificala a tuo piacimento.',
