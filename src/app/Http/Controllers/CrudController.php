@@ -239,7 +239,6 @@ class CrudController extends BaseController
         return view('crud::details_row', $this->data);
     }
 
-
     /**
      * Duplicate (also called clone or copy) an entry.
      *
