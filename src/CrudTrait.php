@@ -301,9 +301,9 @@ trait CrudTrait
         } elseif (starts_with($value, 'data:image')) {
             $img = \Intervention\Image\ImageManagerStatic::make($value);
             $new_file_name = md5($value.time());
-
-            if (! \Illuminate\Support\Facades\File::exists($destination_path)) {
-                \Illuminate\Support\Facades\File::makeDirectory($destination_path, 0775, true);
+            
+            if (! \Illuminate\Support\Facades\File::exists($disk_root.'/'.trim($destination_path, '/'))) {
+                \Illuminate\Support\Facades\File::makeDirectory($disk_root.'/'.trim($destination_path, '/'), 0775, true);
             }
 
             foreach ($variations as $variant => $dimensions) {
