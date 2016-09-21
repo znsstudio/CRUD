@@ -393,6 +393,7 @@ trait CrudTrait
                 }
             }
         }
+
         return $url;
     }
 }
