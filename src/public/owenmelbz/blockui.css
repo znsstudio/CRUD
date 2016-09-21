@@ -1,0 +1,82 @@
+/*csslint box-sizing: false*/
+
+@-webkit-keyframes block-ui-spin {
+    0% {
+        -webkit-transform: rotate(0deg);
+        transform: rotate(0deg);
+    }
+    100% {
+        -webkit-transform: rotate(360deg);
+        transform: rotate(360deg);
+    }
+}
+
+@-moz-keyframes block-ui-spin {
+    0% {
+        -moz-transform: rotate(0deg);
+        transform: rotate(0deg);
+    }
+    100% {
+        -moz-transform: rotate(360deg);
+        transform: rotate(360deg);
+    }
+}
+
+@-o-keyframes block-ui-spin {
+    0% {
+        -o-transform: rotate(0deg);
+        transform: rotate(0deg);
+    }
+    100% {
+        -o-transform: rotate(360deg);
+        transform: rotate(360deg);
+    }
+}
+
+@keyframes block-ui-spin {
+    0% {
+        transform: rotate(0deg);
+    }
+    100% {
+        transform: rotate(360deg);
+    }
+}
+
+.block-ui-target {
+    position: relative;
+    pointer-events: none;
+}
+
+.block-ui-block::after,
+.block-ui-block::before {
+    display: block;
+    content: "";
+    width: 100%;
+    height: 100%;
+    position: absolute;
+    top: 0;
+    left: 0;
+    pointer-events: none;
+}
+
+.block-ui-block::before {
+    z-index: 2000;
+    top: 50%;
+    left: 50%;
+    margin-left: -7px;
+    margin-top: -7px;
+    width: 14px;
+    height: 14px;
+    box-sizing: border-box;
+    border: solid 2px #000000;
+    border-top-color: #605ca8;
+    border-left-color: #605ca8;
+    border-radius: 10px;
+    animation: block-ui-spin 400ms linear infinite;
+}
+
+.block-ui-block::after {
+    background: #FFF;
+    opacity: .7;
+    z-index: 1999;
+}
