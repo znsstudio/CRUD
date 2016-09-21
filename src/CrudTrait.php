@@ -236,7 +236,7 @@ trait CrudTrait
         }
 
         // if a new file is uploaded, delete the file from the disk
-        if ( ($request->hasFile($attribute_name) || starts_with($value, 'data:image')) && $this->{$attribute_name} ) {
+        if (($request->hasFile($attribute_name) || starts_with($value, 'data:image')) && $this->{$attribute_name}) {
             foreach ($variations as $variant => $dimensions) {
                 $variant_name = str_replace('-original', '-'.$variant, $this->{$attribute_name});
                 \Storage::disk($disk)->delete($variant_name);
@@ -250,6 +250,7 @@ trait CrudTrait
                 $variant_name = str_replace('-original', '-'.$variant, $this->{$attribute_name});
                 \Storage::disk($disk)->delete($variant_name);
             }
+
             return $this->attributes[$attribute_name] = null;
         }
 
@@ -269,7 +270,6 @@ trait CrudTrait
             if (class_exists('\Intervention\Image\ImageManagerStatic')) {
                 $img = \Intervention\Image\ImageManagerStatic::make($file);
                 foreach ($variations as $variant => $dimensions) {
-
                     $variant_name = $new_file_name.'-'.$variant.'.'.$file->getClientOriginalExtension();
                     $variant_file = $destination_path.'/'.$variant_name;
 
@@ -287,7 +287,6 @@ trait CrudTrait
                         }
 
                         $image_variations[$variant] = $public_path.'/'.$variant_file;
-
                     } else {
                         $image_variations['original'] = $public_path.'/'.$file_path;
                     }
@@ -299,19 +298,16 @@ trait CrudTrait
 
             // 3. Save the complete path to the database
             $this->attributes[$attribute_name] = $image_variations['original'];
-
-        } elseif( starts_with($value, 'data:image') ) {
-
+        } elseif (starts_with($value, 'data:image')) {
             $img = \Image::make($value);
             $new_file_name = md5($value.time());
 
-            if( !\Illuminate\Support\Facades\File::exists($destination_path) ){
+            if (! \Illuminate\Support\Facades\File::exists($destination_path)) {
                 \Illuminate\Support\Facades\File::makeDirectory($destination_path, 0775, true);
             }
 
             foreach ($variations as $variant => $dimensions) {
-
-                switch( $img->mime() ) {
+                switch ($img->mime()) {
                     case 'image/bmp':
                     case 'image/ief':
                     case 'image/jpeg':
@@ -349,7 +345,6 @@ trait CrudTrait
                     }
 
                     $image_variations[$variant] = $public_path.'/'.$variant_file;
-
                 } else {
                     $img->save($disk_root.'/'.$variant_file);
                     $image_variations['original'] = $variant_file;
@@ -372,11 +367,9 @@ trait CrudTrait
         $image = $this->attributes['image'];
         $url = null;
         if (! empty($image)) {
-
             $image_variant = str_replace('-original', '-'.$variant, $image);
 
             if ($disk) {
-
                 $disk_config = config('filesystems.disks.'.$disk);
                 $disk_root = $disk_config['root'];
 
@@ -387,19 +380,20 @@ trait CrudTrait
                     $public_path = $disk_root;
                 }
 
-                if( \Storage::disk($disk)->exists($image_variant) ){
+                if (\Storage::disk($disk)->exists($image_variant)) {
                     $url = asset($public_path.'/'.$image_variant);
                 } else {
                     $url = asset($public_path.'/'.trim($image, '/'));
                 }
             } else {
-                if( \Storage::exists($image_variant) ){
+                if (\Storage::exists($image_variant)) {
                     $url = \Storage::url(trim($image_variant, '/'));
                 } else {
                     $url = url($image);
                 }
             }
         }
+
         return $url;
     }
 }
