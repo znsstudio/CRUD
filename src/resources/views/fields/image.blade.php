@@ -1,4 +1,4 @@
-  <div class="form-group col-md-12 image" data-preview="#{{ $field['name'] }}" data-aspectRatio="{{ isset($field['aspect_ratio'])?$field['aspect_ratio']:0 }}" data-crop="{{ $field['crop'] }}">
+  <div class="form-group col-md-12 image" data-preview="#{{ $field['name'] }}" data-aspectRatio="{{ isset($field['aspect_ratio'])?$field['aspect_ratio']:0 }}" data-crop="{{ isset($field['crop']) && $field['crop'] }}">
 
     <div>
         <label>{!! $field['label'] !!}</label>
@@ -8,10 +8,10 @@
     <div class="canvas-area row" style="{{empty($field['value']) ? 'display: none;' : ''}}">
 
         <div class="col-sm-6" style="margin-bottom: 20px;">
-            <img class="mainImage" src="{{ !empty($field['value']) ? asset($field['value']) : '' }}">
+            <img class="mainImage" src="{{ !empty($field['value']) ? $entry->getUploadedImageFromDisk($field['name'], 'original', (isset($field['disk']) ? $field['disk'] : null)) : '' }}">
         </div>
 
-        @if($field['crop'])
+        @if(isset($field['crop']) && $field['crop'])
         <div class="col-sm-3">
             <div class="docs-preview clearfix">
                 <div id="{{ $field['name'] }}" class="img-preview preview-lg">
@@ -30,7 +30,7 @@
             <input type="hidden" class="hiddenImage" name="{{ $field['name'] }}">
         </label>
 
-        @if($field['crop'])
+        @if(isset($field['crop']) && $field['crop'])
         <button class="btn btn-default rotateLeft" type="button" style="display: none;"><i class="fa fa-rotate-left"></i></button>
         <button class="btn btn-default rotateRight" type="button" style="display: none;"><i class="fa fa-rotate-right"></i></button>
         <button class="btn btn-default zoomIn" type="button" style="display: none;"><i class="fa fa-search-plus"></i></button>
@@ -83,7 +83,7 @@
                 position: relative;
                 overflow: hidden;
             }
-            
+
             .btn-file input[type=file] {
                 position: absolute;
                 top: 0;

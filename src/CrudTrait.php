@@ -187,4 +187,219 @@ trait CrudTrait
 
         $this->attributes[$attribute_name] = json_encode($attribute_value);
     }
+
+    /**
+     * Handle image upload and DB storage for a image:
+     * - on CREATE
+     *     - stores the image at the destination path
+     *     - generates a name
+     *     - creates image variations
+     *     - stores json object into database with variations and paths
+     * - on UPDATE
+     *     - if the value is null, deletes the file and sets null in the DB
+     *     - if the value is different, stores the different file and updates DB value.
+     *
+     * @param  [type] $value            Value for that column sent from the input.
+     * @param  [type] $attribute_name   Model attribute name (and column in the db).
+     * @param  [type] $disk             Filesystem disk used to store files.
+     * @param  [type] $destination_path Path in disk where to store the files.
+     * @param  [type] $variations       Array of variations and their dimensions
+     */
+    public function uploadImageToDisk($value, $attribute_name, $disk, $destination_path, $variations = null)
+    {
+        if (! $variations || ! is_array($variations)) {
+            $variations = ['original' => null, 'thumb' => [150, 150]];
+        }
+
+        //Needed for the original image
+        if (! array_key_exists('original', $variations)) {
+            $variations['original'] = null;
+        }
+
+        //Needed for admin thumbnails
+        if (! array_key_exists('thumb', $variations)) {
+            $variations['thumb'] = [150, 150];
+        }
+
+        $request = \Request::instance();
+
+        //We need to setup the disk paths as they're handled differently
+        //depending if you need a public path or internal storage
+        $disk_config = config('filesystems.disks.'.$disk);
+        $disk_root = $disk_config['root'];
+
+        //if the disk is public, we need to know the public path
+        if ($disk_config['visibility'] == 'public') {
+            $public_path = str_replace(public_path(), '', $disk_root);
+        } else {
+            $public_path = $disk_root;
+        }
+
+        // if a new file is uploaded, delete the file from the disk
+        if ( ($request->hasFile($attribute_name) || starts_with($value, 'data:image')) && $this->{$attribute_name} ) {
+            foreach ($variations as $variant => $dimensions) {
+                $variant_name = str_replace('-original', '-'.$variant, $this->{$attribute_name});
+                \Storage::disk($disk)->delete($variant_name);
+            }
+            $this->attributes[$attribute_name] = null;
+        }
+
+        // if the file input is empty, delete the file from the disk
+        if (empty($value)) {
+            foreach ($variations as $variant => $dimensions) {
+                $variant_name = str_replace('-original', '-'.$variant, $this->{$attribute_name});
+                \Storage::disk($disk)->delete($variant_name);
+            }
+            return $this->attributes[$attribute_name] = null;
+        }
+
+        // if a new file is uploaded, store it on disk and its filename in the database
+        if ($request->hasFile($attribute_name) && $request->file($attribute_name)->isValid()) {
+
+            // 1. Generate a new file name
+            $file = $request->file($attribute_name);
+            $new_file_name = md5($file->getClientOriginalName().time());
+            $new_file = $new_file_name.'.'.$file->getClientOriginalExtension();
+
+            // 2. Move the new file to the correct path
+            $file_path = $file->storeAs($destination_path, $new_file, $disk);
+            $image_variations = [];
+
+            // 3. but only if they have the ability to crop/handle images
+            if (class_exists('\Intervention\Image\ImageManagerStatic')) {
+                $img = \Intervention\Image\ImageManagerStatic::make($file);
+                foreach ($variations as $variant => $dimensions) {
+
+                    $variant_name = $new_file_name.'-'.$variant.'.'.$file->getClientOriginalExtension();
+                    $variant_file = $destination_path.'/'.$variant_name;
+
+                    if ($dimensions) {
+                        $width = $dimensions[0];
+                        $height = $dimensions[1];
+
+                        if ($img->width() > $width || $img->height() > $height) {
+                            $img->resize($width, $height, function ($constraint) {
+                                $constraint->aspectRatio();
+                            })
+                            ->save($disk_root.'/'.$variant_file);
+                        } else {
+                            $img->save($disk_root.'/'.$variant_file);
+                        }
+
+                        $image_variations[$variant] = $public_path.'/'.$variant_file;
+
+                    } else {
+                        $image_variations['original'] = $public_path.'/'.$file_path;
+                    }
+                }
+            } else {
+                $image_variations['original'] = $public_path.'/'.$file_path;
+                $image_variations['thumb'] = $public_path.'/'.$file_path;
+            }
+
+            // 3. Save the complete path to the database
+            $this->attributes[$attribute_name] = $image_variations['original'];
+
+        } elseif( starts_with($value, 'data:image') ) {
+
+            $img = \Image::make($value);
+            $new_file_name = md5($value.time());
+
+            if( !\Illuminate\Support\Facades\File::exists($destination_path) ){
+                \Illuminate\Support\Facades\File::makeDirectory($destination_path, 0775, true);
+            }
+
+            foreach ($variations as $variant => $dimensions) {
+
+                switch( $img->mime() ) {
+                    case 'image/bmp':
+                    case 'image/ief':
+                    case 'image/jpeg':
+                    case 'image/pipeg':
+                    case 'image/tiff':
+                    case 'image/x-jps':
+                        $extension = '.jpg';
+                        break;
+                    case 'image/gif':
+                        $extension = '.gif';
+                        break;
+                    case 'image/x-icon':
+                    case 'image/png':
+                        $extension = '.png';
+                        break;
+                    default:
+                        $extension = '.jpg';
+                        break;
+                }
+
+                $variant_name = $new_file_name.'-'.$variant.$extension;
+                $variant_file = $destination_path.'/'.$variant_name;
+
+                if ($dimensions) {
+                    $width = $dimensions[0];
+                    $height = $dimensions[1];
+
+                    if ($img->width() > $width || $img->height() > $height) {
+                        $img->resize($width, $height, function ($constraint) {
+                            $constraint->aspectRatio();
+                        })
+                        ->save($disk_root.'/'.$variant_file);
+                    } else {
+                        $img->save($disk_root.'/'.$variant_file);
+                    }
+
+                    $image_variations[$variant] = $public_path.'/'.$variant_file;
+
+                } else {
+                    $img->save($disk_root.'/'.$variant_file);
+                    $image_variations['original'] = $variant_file;
+                }
+            }
+
+            $this->attributes[$attribute_name] = $image_variations['original'];
+        }
+    }
+
+    /**
+     * Handles the retrieval of an image by variant:.
+     *
+     * @param  [type] $attribute        Name of the attribute within the model that contains the json
+     * @param  [type] $variant          Name of the variant you want to extract
+     * @param  [type] $disk             Filesystem disk used to store files.
+     */
+    public function getUploadedImageFromDisk($attribute, $variant = 'original', $disk = null)
+    {
+        $image = $this->attributes['image'];
+        $url = null;
+        if (! empty($image)) {
+
+            $image_variant = str_replace('-original', '-'.$variant, $image);
+
+            if ($disk) {
+
+                $disk_config = config('filesystems.disks.'.$disk);
+                $disk_root = $disk_config['root'];
+
+                //if the disk is public, we need to know the public path
+                if ($disk_config['visibility'] == 'public') {
+                    $public_path = str_replace(public_path(), '', $disk_root);
+                } else {
+                    $public_path = $disk_root;
+                }
+
+                if( \Storage::disk($disk)->exists($image_variant) ){
+                    $url = asset($public_path.'/'.$image_variant);
+                } else {
+                    $url = asset($public_path.'/'.trim($image, '/'));
+                }
+            } else {
+                if( \Storage::exists($image_variant) ){
+                    $url = \Storage::url(trim($image_variant, '/'));
+                } else {
+                    $url = url($image);
+                }
+            }
+        }
+        return $url;
+    }
 }
