@@ -299,7 +299,7 @@ trait CrudTrait
             // 3. Save the complete path to the database
             $this->attributes[$attribute_name] = $image_variations['original'];
         } elseif (starts_with($value, 'data:image')) {
-            $img = \Image::make($value);
+            $img = \Intervention\Image\ImageManagerStatic::make($value);
             $new_file_name = md5($value.time());
 
             if (! \Illuminate\Support\Facades\File::exists($destination_path)) {
@@ -393,7 +393,6 @@ trait CrudTrait
                 }
             }
         }
-
         return $url;
     }
 }
