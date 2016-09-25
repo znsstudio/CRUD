@@ -92,7 +92,7 @@
                 function checkUnicity()
                 {
                     //only look it up if its actually changed
-                    if( lastCheck != $field.val() ){
+                    if( lastCheck != $field.val() && $field.val().length ){
                         lastCheck = $field.val()
                         $icon.removeClass(classList).addClass('fa-spinner fa-spin');
                         xhr = $.post($endPoint, {
