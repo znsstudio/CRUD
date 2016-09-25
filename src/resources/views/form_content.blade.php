@@ -64,6 +64,7 @@
                 var $field = $(this),
                 $container = $field.parent(),
                 $icon = $('<i class="fa fa-pencil"></i>'),
+                $hint = $('<div class="col-xs-12" style="display: none;"><div class="alert alert-info"><p><!-- hint message --></p></div></div>'),
                 $uniqueConfig = $field.data('unique'),
                 $entityKey = $('[name="id"]').val(),
                 $endPoint = $entityKey ? '../unicity' : 'unicity';
@@ -72,6 +73,7 @@
                 $container.css({position: 'relative'});
                 $container.append($icon);
                 $icon.css({'position': 'absolute', 'right': 25, 'bottom': 10, 'pointer-events': 'none'});
+                $container.after($hint);
 
                 //handle typing events
                 var debounceTimer,
@@ -102,9 +104,23 @@
                             $icon.removeClass(classList).removeClass('fa-pencil');
                             if( response.success || response.meta.entity_key == $entityKey){
                                 $icon.addClass('fa-check');
+                                $hint.slideUp();
                             } else {
                                 $icon.addClass('fa-times');
+
+                                if( $uniqueConfig.hint ){
+
+                                    var msg = response.message;
+
+                                    if( response.meta && response.meta.link ){
+                                        msg += ' - <a href="'+ response.meta.link +'" target="_blank">' + response.meta.snippet + '</a>';
+                                    }
+
+                                    $hint.find('p').html(msg);
+                                    $hint.slideDown();
+                                }
                             }
+
                         }, function( response ){
                             var msg = response.message || 'Sorry something went wrong, please check your configuration and try again';
                             alert(msg);

@@ -23,7 +23,8 @@
     @php
     $unique_config = [
         'field_name' => $field['name'],
-        'display_name' => isset($field['unique_hint']) ? $field['unique_hint'] : false
+        'display_name' => isset($field['unique_hint']) ? $field['unique_hint'] : false,
+        'hint' => isset($field['unique_hint']) ? true : false
     ];
     @endphp
     data-unique="{{ json_encode($unique_config) }}"
