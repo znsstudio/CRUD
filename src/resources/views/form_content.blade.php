@@ -122,7 +122,7 @@
                             }
 
                         }, function( response ){
-                            var msg = response.message || 'Sorry something went wrong, please check your configuration and try again';
+                            var msg = response.message || '{{trans('backpack::crud.unique_error')}}';
                             alert(msg);
                         })
                     }
