@@ -114,7 +114,7 @@ class CrudServiceProvider extends ServiceProvider
             'as' => 'crud.'.$name.'.restoreRevision',
             'uses' => $controller.'@restoreRevision',
         ]);
-        Route::get($name.'/unicity', [
+        Route::any($name.'/unicity', [
             'as' => 'crud.'.$name.'.unicity',
             'uses' => $controller.'@unicity',
         ]);

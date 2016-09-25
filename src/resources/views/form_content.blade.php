@@ -36,16 +36,85 @@
 	@stack('crud_fields_scripts')
 
 	<script>
-		// Ctrl+S and Cmd+S trigger Save button click
-		$(document).keydown(function(e) {
-		    if ((e.which == '115' || e.which == '83' ) && (e.ctrlKey || e.metaKey))
-		    {
-		        e.preventDefault();
-		        // alert("Ctrl-s pressed");
-		        $("button[type=submit]").trigger('click');
-		        return false;
-		    }
-		    return true;
-		});
+
+        jQuery('document').ready(function($){
+
+    		// Ctrl+S and Cmd+S trigger Save button click
+    		$(document).keydown(function(e) {
+    		    if ((e.which == '115' || e.which == '83' ) && (e.ctrlKey || e.metaKey))
+    		    {
+    		        e.preventDefault();
+    		        // alert("Ctrl-s pressed");
+    		        $("button[type=submit]").trigger('click');
+    		        return false;
+    		    }
+    		    return true;
+    		});
+
+            @php
+                $unique_fields = array_filter($fields, function($f){
+                    return isset($f['unique']) && $f['unique'];
+                });
+            @endphp
+
+            @if ( count($unique_fields) )
+            //Unique field checks
+            $('[data-unique]').each(function(){
+
+                var $field = $(this),
+                $container = $field.parent(),
+                $icon = $('<i class="fa fa-pencil"></i>'),
+                $uniqueConfig = $field.data('unique'),
+                $entityKey = $('[name="id"]').val(),
+                $endPoint = $entityKey ? '../unicity' : 'unicity';
+
+                //prepare container
+                $container.css({position: 'relative'});
+                $container.append($icon);
+                $icon.css({'position': 'absolute', 'right': 25, 'bottom': 10, 'pointer-events': 'none'});
+
+                //handle typing events
+                var debounceTimer,
+                lastCheck = $field.val(),
+                xhr,
+                classList = 'fa-check fa-times fa-spinner fa-spin';
+
+                $field.on('keyup', function(){
+                    $icon.removeClass(classList).addClass('fa-pencil');
+                    if( xhr && xhr.abort ) xhr.abort();
+                    clearTimeout(debounceTimer);
+                    debounceTimer = setTimeout(checkUnicity, 400);
+                });
+
+                //lookup field
+                function checkUnicity()
+                {
+                    //only look it up if its actually changed
+                    if( lastCheck != $field.val() ){
+                        lastCheck = $field.val()
+                        $icon.removeClass(classList).addClass('fa-spinner fa-spin');
+                        xhr = $.post($endPoint, {
+                            field_name: $uniqueConfig.field_name,
+                            check_value: $field.val(),
+                            display_name: $uniqueConfig.display_name
+                        }, null, 'json')
+                        .then(function( response ){
+                            $icon.removeClass(classList).removeClass('fa-pencil');
+                            if( response.success || response.meta.entity_key == $entityKey){
+                                $icon.addClass('fa-check');
+                            } else {
+                                $icon.addClass('fa-times');
+                            }
+                        }, function( response ){
+                            var msg = response.message || 'Sorry something went wrong, please check your configuration and try again';
+                            alert(msg);
+                        })
+                    }
+                }
+            });
+
+            @endif
+
+        });
 	</script>
 @endsection

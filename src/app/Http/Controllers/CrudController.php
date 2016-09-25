@@ -374,7 +374,7 @@ class CrudController extends BaseController
             $response['message'] = 'value is missing';
         } else {
 
-            $existing_entity = $this->crud->model->where([$field_name => $check_value])->first();
+            $existing_entity = $this->crud->model->where([$field_name => trim($check_value)])->first();
 
             if (! $existing_entity ) {
                 $response['success'] = true;
