@@ -114,4 +114,8 @@ return [
     'unique_field_name_missing' => 'field_name is missing from unicity check',
     'unique_check_value_missing' => 'check_value is missing from unicity check',
     'unique_exists' => 'already exists',
+
+    //Table field
+    'table_cant_add' => 'Cannot add new :entity',
+    'table_max_reached' => 'Maximum number of :max reached',
 ];
