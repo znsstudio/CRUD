@@ -90,7 +90,7 @@
                $hint = $('<div class="col-xs-12" style="display: none;"><div class="alert alert-info"><p><!-- hint message --></p></div></div>'),
                $uniqueConfig = $field.data('unique'),
                $entityKey = $('[name="id"]').val(),
-               $endPoint = $entityKey ? '../unicity' : 'unicity';
+               $endPoint = $entityKey ? '../ajax/checkUniqueString' : 'ajax/checkUniqueString';
 
                //prepare container
                $container.css({position: 'relative'});
