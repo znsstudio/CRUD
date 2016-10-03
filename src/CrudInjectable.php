@@ -23,10 +23,10 @@ class CrudInjectable
 
     public function with($injectables)
     {
-        if(is_string($injectables)){
+        if (is_string($injectables)) {
             $this->requiredInjectables[] = 'with'.ucwords($injectables);
-        } elseif( is_array($injectables) ){
-            foreach($injectables as $injectable){
+        } elseif (is_array($injectables)) {
+            foreach ($injectables as $injectable) {
                 $this->requiredInjectables = 'with'.ucwords($injectable);
             }
         }
@@ -36,14 +36,14 @@ class CrudInjectable
 
     private function inject()
     {
-        foreach($this->requiredInjectables as $injectable){
+        foreach ($this->requiredInjectables as $injectable) {
             $this->{$injectable}();
         }
     }
 
     public function __call($method, $parameters = null)
     {
-        if( method_exists($this, $method) ){
+        if (method_exists($this, $method)) {
             $this->{$method}($parameters);
         }
     }

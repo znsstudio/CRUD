@@ -5,7 +5,6 @@ namespace Backpack\CRUD;
 use Illuminate\Support\ServiceProvider;
 use Route;
 
-use Backpack\CRUD\CrudInjectable as CrudInjectable;
 
 class CrudServiceProvider extends ServiceProvider
 {
@@ -116,7 +115,7 @@ class CrudServiceProvider extends ServiceProvider
             'as' => 'crud.'.$name.'.restoreRevision',
             'uses' => $controller.'@restoreRevision',
         ]);
-        
+
         $options_with_default_route_names = array_merge([
             'names' => [
                 'index'     => 'crud.'.$name.'.index',
