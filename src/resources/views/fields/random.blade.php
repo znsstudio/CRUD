@@ -78,6 +78,7 @@
         $combination = $alphanumericsymbols_mixed;
     }
 
+    //get it ready for injecting as json config
     $random_config = ['pattern' => $combination, 'length' => $length];
 ?>
 
@@ -85,17 +86,16 @@
     <label>{!! $field['label'] !!}</label>
 
     <div class="row random-row">
-        <div class="col-xs-10">
+        <div class="col-xs-8 col-sm-10">
             <input
-                data-random="{{ json_encode($random_config) }}"
                 type="text"
                 name="{{ $field['name'] }}"
                 value="{{ old($field['name']) ? old($field['name']) : (isset($field['value']) ? $field['value'] : (isset($field['default']) ? $field['default'] : '' )) }}"
                 @include('crud::inc.field_attributes')
             >
         </div>
-        <div class="col-xs-2">
-            <button type="button" class="btn btn-primary btn-sm pull-right">Randomise</button>
+        <div class="col-xs-4 col-sm-2">
+            <button data-random="{{ json_encode($random_config) }}" type="button" class="btn btn-primary pull-right" style="height: 34px;">Randomise</button>
         </div>
     </div>
     {{-- HINT --}}
@@ -119,22 +119,23 @@
     <script src="https://cdn.jsdelivr.net/places.js/1/places.min.js"></script>
     <script>
         jQuery(document).ready(function($){
-            $('[data-random]').each(function(){
-                $field = $(this),
-                $button = $field.parents('.random-row').find('button'),
-                $config = $field.data('random');
 
-                $button.on('click', function(){
-                    var string = '';
-                    var possible = $config.pattern;
+            $randomise = function(){
 
-                    for( var i = 0; i < $config.length; i++ ){
-                        string += possible.charAt(Math.floor(Math.random() * possible.length));
-                    };
+                $button = $(this),
+                $field  = $button.parents('.random-row').find('input'),
+                $config = $button.data('random');
 
-                    $field.val( string );
-                });
-            })
+                var $string = '';
+
+                for( var i = 0; i < $config.length; i++ ){
+                    $string += $config.pattern.charAt(Math.floor(Math.random() * $config.pattern.length));
+                };
+
+                $field.val( $string );
+            };
+
+            $('[data-random]').on('click', $randomise);
         });
     </script>
     @endpush
