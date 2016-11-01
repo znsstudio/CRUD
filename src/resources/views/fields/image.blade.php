@@ -54,6 +54,9 @@
         {{-- YOUR CSS HERE --}}
         <link href="{{ asset('vendor/backpack/cropper/dist/cropper.min.css') }}" rel="stylesheet" type="text/css" />
         <style>
+
+            @-webkit-keyframes block-ui-spin{0%{-webkit-transform:rotate(0);transform:rotate(0)}100%{-webkit-transform:rotate(360deg);transform:rotate(360deg)}}@-moz-keyframes block-ui-spin{0%{-moz-transform:rotate(0);transform:rotate(0)}100%{-moz-transform:rotate(360deg);transform:rotate(360deg)}}@-o-keyframes block-ui-spin{0%{-o-transform:rotate(0);transform:rotate(0)}100%{-o-transform:rotate(360deg);transform:rotate(360deg)}}@keyframes block-ui-spin{0%{transform:rotate(0)}100%{transform:rotate(360deg)}}.block-ui-target{position:relative;pointer-events:none}.block-ui-block::after,.block-ui-block::before{display:block;content:"";width:100%;height:100%;position:absolute;top:0;left:0;pointer-events:none}.block-ui-block::before{z-index:2000;top:50%;left:50%;margin-left:-7px;margin-top:-7px;width:14px;height:14px;box-sizing:border-box;border:2px solid #000;border-top-color:#00ADEC;border-left-color:#00ADEC;border-radius:10px;animation:block-ui-spin .4s linear infinite}.block-ui-block::after{background:#FFF;opacity:.7;z-index:1999}
+
             .btn-group {
                 margin-top: 10px;
             }
@@ -108,6 +111,9 @@
         {{-- YOUR JS HERE --}}
         <script src="{{ asset('vendor/backpack/cropper/dist/cropper.min.js') }}"></script>
         <script>
+
+            !function(a){"use strict";a.fn.blockui=a.fn.blockUI=function(){return this.addClass("block-ui-target block-ui-block"),this},a.fn.unblockui=a.fn.unblockUI=function(){return this.removeClass("block-ui-target block-ui-block"),this}}(window.jQuery);
+
             jQuery(document).ready(function($) {
                 // Loop through all instances of the image field
                 $('.form-group.image').each(function(index){
