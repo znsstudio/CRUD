@@ -37,6 +37,7 @@ return [
     'restore_this_value'   => 'a restabili această valoare',
     'from'                 => 'din',
     'to'                   => 'la',
+    'undo'                 => 'Anula',
     'revision_restored'    => 'Revizia restaurat cu succes',
 
     // CRUD table view
@@ -95,6 +96,10 @@ return [
     'reorder_success_message'      => 'Ordinea a fost salvată.',
     'reorder_error_title'          => 'Eroare',
     'reorder_error_message'        => 'Ordinea nu a fost salvată.',
+
+    // CRUD yes/no
+    'yes' => 'Da',
+    'no' => 'Nu',
 
     // Fields
     'browse_uploads' => 'Alege din fișierele urcate',

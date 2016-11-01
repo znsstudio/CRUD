@@ -37,6 +37,7 @@ return [
     'restore_this_value'   => 'ripristinare questo valore',
     'from'                 => 'de parte di',
     'to'                   => 'a',
+    'undo'                 => 'Disfare',
     'revision_restored'    => 'Revisione successo restaurato',
 
     // CRUD table view
@@ -97,6 +98,10 @@ return [
     'reorder_success_message'      => 'Il tuo ordinamento è stato salvato.',
     'reorder_error_title'          => 'Errore',
     'reorder_error_message'        => 'Il tuo ordinamento non è stato salvato.',
+
+    // CRUD yes/no
+    'yes' => 'Sì',
+    'no' => 'No',
 
     // Fields
     'browse_uploads' => 'Sfoglia file caricati',

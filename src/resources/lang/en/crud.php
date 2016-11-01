@@ -37,6 +37,7 @@ return [
     'restore_this_value'   => 'Restore this value',
     'from'                 => 'from',
     'to'                   => 'to',
+    'undo'                 => 'Undo',
     'revision_restored'    => 'Revision successfully restored',
 
     // CRUD table view
@@ -98,6 +99,10 @@ return [
     'reorder_error_title'          => 'Error',
     'reorder_error_message'        => 'Your order has not been saved.',
 
+    // CRUD yes/no
+    'yes' => 'Yes',
+    'no' => 'No',
+
     // Fields
     'browse_uploads' => 'Browse uploads',
     'clear' => 'Clear',
@@ -107,5 +112,9 @@ return [
     'internal_link_placeholder' => 'Internal slug. Ex: \'admin/page\' (no quotes) for \':url\'',
     'external_link' => 'External link',
     'choose_file' => 'Choose file',
+
+    //Table field
+    'table_cant_add' => 'Cannot add new :entity',
+    'table_max_reached' => 'Maximum number of :max reached',
 
 ];

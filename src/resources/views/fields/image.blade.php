@@ -1,5 +1,4 @@
-  <div class="form-group col-md-12 image" data-preview="#{{ $field['name'] }}" data-aspectRatio="{{ isset($field['aspect_ratio'])?$field['aspect_ratio']:0 }}" data-crop="{{ isset($field['crop']) && $field['crop'] }}">
-
+  <div class="form-group col-md-12 image" data-preview="#{{ $field['name'] }}" data-aspectRatio="{{ isset($field['aspect_ratio']) ? $field['aspect_ratio'] : 0 }}" data-crop="{{ isset($field['crop']) ? $field['crop'] : false }}" @include('crud::inc.field_wrapper_attributes')>
     <div>
         <label>{!! $field['label'] !!}</label>
     </div>
@@ -8,9 +7,8 @@
     <div class="canvas-area row" style="{{empty($field['value']) ? 'display: none;' : ''}}">
 
         <div class="col-sm-6" style="margin-bottom: 20px;">
-            <img class="mainImage" src="{{ !empty($field['value']) ? $entry->getUploadedImageFromDisk($field['name'], 'original', (isset($field['disk']) ? $field['disk'] : null)) : '' }}">
+            <img id="mainImage" src="{{ url(old($field['name']) ? old($field['name']) : (isset($field['value']) ? $field['value'] : (isset($field['default']) ? $field['default'] : '') )) }}">
         </div>
-
         @if(isset($field['crop']) && $field['crop'])
         <div class="col-sm-3">
             <div class="docs-preview clearfix">
@@ -24,22 +22,25 @@
     </div>
 
     <div class="btn-group">
-
-        <label class="btn btn-primary btn-file {{empty($field['value']) ? 'dropdown-toggle' : ''}}">
-            {{ trans('backpack::crud.choose_file') }} <input type="file" accept="image/*" class="uploadImage" style="display: none;">
-            <input type="hidden" class="hiddenImage" name="{{ $field['name'] }}">
+        <label class="btn btn-primary btn-file">
+            {{ trans('backpack::crud.choose_file') }} <input type="file" accept="image/*" id="uploadImage"  @include('crud::inc.field_attributes', ['default_class' => 'hide'])>
+            <input type="hidden" id="hiddenImage" name="{{ $field['name'] }}">
         </label>
-
         @if(isset($field['crop']) && $field['crop'])
-        <button class="btn btn-default rotateLeft" type="button" style="display: none;"><i class="fa fa-rotate-left"></i></button>
-        <button class="btn btn-default rotateRight" type="button" style="display: none;"><i class="fa fa-rotate-right"></i></button>
-        <button class="btn btn-default zoomIn" type="button" style="display: none;"><i class="fa fa-search-plus"></i></button>
-        <button class="btn btn-default zoomOut" type="button" style="display: none;"><i class="fa fa-search-minus"></i></button>
-        <button class="btn btn-warning reset" type="button" style="display: none;"><i class="fa fa-times"></i></button>
+        <button class="btn btn-default" id="rotateLeft" type="button" style="display: none;"><i class="fa fa-rotate-left"></i></button>
+        <button class="btn btn-default" id="rotateRight" type="button" style="display: none;"><i class="fa fa-rotate-right"></i></button>
+        <button class="btn btn-default" id="zoomIn" type="button" style="display: none;"><i class="fa fa-search-plus"></i></button>
+        <button class="btn btn-default" id="zoomOut" type="button" style="display: none;"><i class="fa fa-search-minus"></i></button>
+        <button class="btn btn-warning" id="reset" type="button" style="display: none;"><i class="fa fa-times"></i></button>
         @endif
 
         <button class="btn btn-danger remove" type="button"><i class="fa fa-trash"></i></button>
     </div>
+
+    {{-- HINT --}}
+    @if (isset($field['hint']))
+        <p class="help-block">{!! $field['hint'] !!}</p>
+    @endif
   </div>
 
 

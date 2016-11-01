@@ -29,6 +29,17 @@ return [
     'edit'                 => 'Modifier',
     'save'                 => 'Enregistrer',
 
+    // Revisions
+    'revisions'            => 'Révisions',
+    'no_revisions'         => 'Pas de révisions',
+    'created_this'          => 'Créé Cette',
+    'changed_the'          => 'Modifié le',
+    'restore_this_value'   => 'Restaurer Cette valeur',
+    'from'                 => 'De',
+    'to'                   => 'À',
+    'undo'                 => 'annuler',
+    'revision_restored'    => 'révision Restauré',
+
     // CRUD table view
     'all'                       => 'Tous les ',
     'in_the_database'           => 'en base de donnée',
@@ -87,6 +98,10 @@ return [
     'reorder_success_message'      => 'L’ordre a été enregistré.',
     'reorder_error_title'          => 'Erreur',
     'reorder_error_message'        => 'L’ordre n’a pas pu être enregistré.',
+
+    // CRUD yes/no
+    'yes' => 'Oui',
+    'no' => 'Non',
 
     // Fields
     'browse_uploads' => 'Parcourir les fichier chargés',

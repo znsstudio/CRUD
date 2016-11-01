@@ -20,6 +20,165 @@ All Notable changes to `Backpack CRUD` will be documented in this file
 - Nothing
 
 
+## [3.1.36] - 2016-10-30
+
+### Added
+- SimpleMDE field type (simple markdown editor).
+
+
+## [3.1.35] - 2016-10-30
+
+### Added
+- new column type: boolean;
+- new field type: color_picker;
+- new field type: date_picker;
+- new field type: datetime_picker;
+
+### Fixed
+- fixed default of 0 for radio field types;
+- fixes #187 - can now clear old address entries;
+- fixes hiding/showing buttons when the min/max are reached;
+- ckeditor field type now has customizable plugins;
+
+
+## [3.1.34] - 2016-10-22
+
+### Fixed
+- Config file is now published in the right folder.
+
+
+## [3.1.33] - 2016-10-17
+
+### Fixed
+- all fields now have hint, default value and customizable wrapper class - thanks to [Owen Melbourne](https://github.com/OwenMelbz); modifications were made in the following fields: base64_image, checklist, checklist_dependecy, image;
+- creating/updating elements works with morphable fields too; you need to define "morph" => true on the field for it to work;
+- isCollumnNullable is now calculated using Doctrine, so that it works for MySQL, PosgreSQL and SQLite;
+
+
+## [3.1.32] - 2016-10-17
+
+### Added
+- video field type - thanks to [Owen Melbourne](https://github.com/OwenMelbz);
+
+
+## [3.1.31] - 2016-10-17
+
+### Added
+- $this->crud->removeAllButtons() and $this->crud->removeAllButtonsFromStack();
+
+
+## [3.1.30] - 2016-10-17
+
+### Fixed
+- upload_multiple field did not remove the files from disk if no new files were added; solved with a hack - added a hidden input with the same name before it, so it always has a value and the mutator is always triggered;
+
+
+## [3.1.29] - 2016-10-17
+
+### Fixed
+- elFinder height needed a 2px adjustment in javascript; now that's solved using css;
+
+
+## [3.1.28] - 2016-10-16
+
+### Added
+- When elfinder is launched as it's own window, display full-screen;
+
+### Fixed
+- Update routes and editor links to follow the route_prefix set in config;
+- elFinder iframe now has no white background and uses backpack theme;
+
+
+## [3.1.27] - 2016-10-7
+
+### Fixed
+- 'table' field is properly encapsulated now;
+
+
+## [3.1.26] - 2016-09-30
+
+### Fixed
+- bug fix for 'table' field type - you can now have multiple fields on the same form;
+
+
+## [3.1.25] - 2016-09-28
+
+### Fixed
+- table field JSON bug;
+
+
+## [3.1.24] - 2016-09-27
+
+### Added
+- address field type - thanks to [Owen Melbourne](https://github.com/OwenMelbz);
+
+
+## [3.1.23] - 2016-09-27
+
+### Added
+- autoFocus() and autoFocusOnFirstField() - thanks to [Owen Melbourne](https://github.com/OwenMelbz);
+
+
+## [3.1.22] - 2016-09-27
+
+### Fixed
+- checklist and checklist_dependency fields allow html on labels;
+
+
+## [3.1.21] - 2016-09-26
+
+### Added
+- "table" field type - thanks to [Owen Melbourne](https://github.com/OwenMelbz);
+- "multidimensional_array" column type - thanks to [Owen Melbourne](https://github.com/OwenMelbz);
+
+
+## [3.1.20] - 2016-09-26
+
+### Added
+- Non-core CRUD features are now separated into traits;
+
+### Fixed
+- The 'password' field is no longer filtered before the create event;
+- CrudPanels can now be defined in the new EntityCrudController::setup() method;
+
+## [3.1.19] - 2016-09-26
+
+### Fixed
+- AJAX datatables can now have select_multiple columns;
+
+
+## [3.1.18] - 2016-09-25
+
+### Fixed
+- checkbox field has default value;
+
+
+
+## [3.1.17] - 2016-09-25
+
+### Fixed
+- Raw DB queries did not account for DB prefixes;
+
+
+## [3.1.16] - 2016-09-22
+
+### Added
+- Radio field and column - thanks to [Owen Melbourne](https://github.com/OwenMelbz);
+
+
+## [3.1.15] - 2016-09-21
+
+### Fixed
+- Missing $fillable item in model will now throw correct error, because _token is ignored;
+- Correct and complete language files;
+
+
+## [3.1.14] - 2016-09-19
+
+### Fixed
+- Checkbox storing issue in Laravel 5.3 - #115 thanks to [timdiels1](https://github.com/timdiels1);
+
+
 ## [3.1.13] - 2016-09-19
 
 ### Added
