@@ -1,47 +1,46 @@
-  <div class="form-group col-md-12 image" data-preview="#{{ $field['name'] }}" data-aspectRatio="{{ isset($field['aspect_ratio']) ? $field['aspect_ratio'] : 0 }}" data-crop="{{ isset($field['crop']) ? $field['crop'] : false }}" @include('crud::inc.field_wrapper_attributes')>
-    <div>
-        <label>{!! $field['label'] !!}</label>
-    </div>
+<div class="form-group col-md-12 image" data-preview="#{{ $field['name'] }}" data-aspectRatio="{{ isset($field['aspect_ratio'])?$field['aspect_ratio']:0 }}" data-crop="{{ isset($field['crop']) && $field['crop'] }}">
 
-    <!-- Wrap the image or canvas element with a block element (container) -->
-    <div class="canvas-area row" style="{{empty($field['value']) ? 'display: none;' : ''}}">
-
-        <div class="col-sm-6" style="margin-bottom: 20px;">
-            <img id="mainImage" src="{{ url(old($field['name']) ? old($field['name']) : (isset($field['value']) ? $field['value'] : (isset($field['default']) ? $field['default'] : '') )) }}">
-        </div>
-        @if(isset($field['crop']) && $field['crop'])
-        <div class="col-sm-3">
-            <div class="docs-preview clearfix">
-                <div id="{{ $field['name'] }}" class="img-preview preview-lg">
-                    <img src="" style="display: block; min-width: 0px !important; min-height: 0px !important; max-width: none !important; max-height: none !important; margin-left: -32.875px; margin-top: -18.4922px; transform: none;">
-                </div>
-            </div>
-        </div>
-        @endif
-
-    </div>
-
-    <div class="btn-group">
-        <label class="btn btn-primary btn-file">
-            {{ trans('backpack::crud.choose_file') }} <input type="file" accept="image/*" id="uploadImage"  @include('crud::inc.field_attributes', ['default_class' => 'hide'])>
-            <input type="hidden" id="hiddenImage" name="{{ $field['name'] }}">
-        </label>
-        @if(isset($field['crop']) && $field['crop'])
-        <button class="btn btn-default" id="rotateLeft" type="button" style="display: none;"><i class="fa fa-rotate-left"></i></button>
-        <button class="btn btn-default" id="rotateRight" type="button" style="display: none;"><i class="fa fa-rotate-right"></i></button>
-        <button class="btn btn-default" id="zoomIn" type="button" style="display: none;"><i class="fa fa-search-plus"></i></button>
-        <button class="btn btn-default" id="zoomOut" type="button" style="display: none;"><i class="fa fa-search-minus"></i></button>
-        <button class="btn btn-warning" id="reset" type="button" style="display: none;"><i class="fa fa-times"></i></button>
-        @endif
-
-        <button class="btn btn-danger remove" type="button"><i class="fa fa-trash"></i></button>
-    </div>
-
-    {{-- HINT --}}
-    @if (isset($field['hint']))
-        <p class="help-block">{!! $field['hint'] !!}</p>
-    @endif
+  <div>
+      <label>{!! $field['label'] !!}</label>
   </div>
+
+  <!-- Wrap the image or canvas element with a block element (container) -->
+  <div class="canvas-area row" style="{{empty($field['value']) ? 'display: none;' : ''}}">
+
+      <div class="col-sm-6" style="margin-bottom: 20px;">
+          <img class="mainImage" src="{{ !empty($field['value']) ? $entry->getUploadedImageFromDisk($field['name'], 'original', (isset($field['disk']) ? $field['disk'] : null)) : '' }}">
+      </div>
+
+      @if(isset($field['crop']) && $field['crop'])
+      <div class="col-sm-3">
+          <div class="docs-preview clearfix">
+              <div id="{{ $field['name'] }}" class="img-preview preview-lg">
+                  <img src="" style="display: block; min-width: 0px !important; min-height: 0px !important; max-width: none !important; max-height: none !important; margin-left: -32.875px; margin-top: -18.4922px; transform: none;">
+              </div>
+          </div>
+      </div>
+      @endif
+
+  </div>
+
+  <div class="btn-group">
+
+      <label class="btn btn-primary btn-file {{empty($field['value']) ? 'dropdown-toggle' : ''}}">
+          {{ trans('backpack::crud.choose_file') }} <input type="file" accept="image/*" class="uploadImage" style="display: none;">
+          <input type="hidden" class="hiddenImage" name="{{ $field['name'] }}">
+      </label>
+
+      @if(isset($field['crop']) && $field['crop'])
+      <button class="btn btn-default rotateLeft" type="button" style="display: none;"><i class="fa fa-rotate-left"></i></button>
+      <button class="btn btn-default rotateRight" type="button" style="display: none;"><i class="fa fa-rotate-right"></i></button>
+      <button class="btn btn-default zoomIn" type="button" style="display: none;"><i class="fa fa-search-plus"></i></button>
+      <button class="btn btn-default zoomOut" type="button" style="display: none;"><i class="fa fa-search-minus"></i></button>
+      <button class="btn btn-warning reset" type="button" style="display: none;"><i class="fa fa-times"></i></button>
+      @endif
+
+      <button class="btn btn-danger remove" type="button"><i class="fa fa-trash"></i></button>
+  </div>
+</div>
 
 
 {{-- ########################################## --}}
@@ -49,227 +48,221 @@
 {{-- If a field type is shown multiple times on a form, the CSS and JS will only be loaded once --}}
 @if ($crud->checkIfFieldIsFirstOfItsType($field, $fields))
 
-    {{-- FIELD CSS - will be loaded in the after_styles section --}}
-    @push('crud_fields_styles')
-        {{-- YOUR CSS HERE --}}
-        <link href="{{ asset('vendor/backpack/cropper/dist/cropper.min.css') }}" rel="stylesheet" type="text/css" />
-        <style>
+  {{-- FIELD CSS - will be loaded in the after_styles section --}}
+  @push('crud_fields_styles')
+      {{-- YOUR CSS HERE --}}
+      <link href="{{ asset('vendor/backpack/cropper/dist/cropper.min.css') }}" rel="stylesheet" type="text/css" />
+      <style>
+          .btn-group {
+              margin-top: 10px;
+          }
 
-            @-webkit-keyframes block-ui-spin{0%{-webkit-transform:rotate(0);transform:rotate(0)}100%{-webkit-transform:rotate(360deg);transform:rotate(360deg)}}@-moz-keyframes block-ui-spin{0%{-moz-transform:rotate(0);transform:rotate(0)}100%{-moz-transform:rotate(360deg);transform:rotate(360deg)}}@-o-keyframes block-ui-spin{0%{-o-transform:rotate(0);transform:rotate(0)}100%{-o-transform:rotate(360deg);transform:rotate(360deg)}}@keyframes block-ui-spin{0%{transform:rotate(0)}100%{transform:rotate(360deg)}}.block-ui-target{position:relative;pointer-events:none}.block-ui-block::after,.block-ui-block::before{display:block;content:"";width:100%;height:100%;position:absolute;top:0;left:0;pointer-events:none}.block-ui-block::before{z-index:2000;top:50%;left:50%;margin-left:-7px;margin-top:-7px;width:14px;height:14px;box-sizing:border-box;border:2px solid #000;border-top-color:#00ADEC;border-left-color:#00ADEC;border-radius:10px;animation:block-ui-spin .4s linear infinite}.block-ui-block::after{background:#FFF;opacity:.7;z-index:1999}
+          img {
+              max-width: 100%; /* This rule is very important, please do not ignore this! */
+          }
 
-            .btn-group {
-                margin-top: 10px;
-            }
+          .img-container,
+          .img-preview {
+              width: 100%;
+              text-align: center;
+          }
 
-            img {
-                max-width: 100%; /* This rule is very important, please do not ignore this! */
-            }
+          .img-preview {
+              float: left;
+              margin-right: 10px;
+              margin-bottom: 10px;
+              overflow: hidden;
+          }
 
-            .img-container,
-            .img-preview {
-                width: 100%;
-                text-align: center;
-            }
+          .preview-lg {
+              width: 263px;
+              height: 148px;
+          }
 
-            .img-preview {
-                float: left;
-                margin-right: 10px;
-                margin-bottom: 10px;
-                overflow: hidden;
-            }
+          .btn-file {
+              position: relative;
+              overflow: hidden;
+          }
 
-            .preview-lg {
-                width: 263px;
-                height: 148px;
-            }
+          .btn-file input[type=file] {
+              position: absolute;
+              top: 0;
+              right: 0;
+              min-width: 100%;
+              min-height: 100%;
+              font-size: 100px;
+              text-align: right;
+              filter: alpha(opacity=0);
+              opacity: 0;
+              outline: none;
+              background: white;
+              cursor: inherit;
+              display: block;
+          }
+      </style>
+  @endpush
 
-            .btn-file {
-                position: relative;
-                overflow: hidden;
-            }
+  {{-- FIELD JS - will be loaded in the after_scripts section --}}
+  @push('crud_fields_scripts')
+      {{-- YOUR JS HERE --}}
+      <script src="{{ asset('vendor/backpack/cropper/dist/cropper.min.js') }}"></script>
+      <script>
+          jQuery(document).ready(function($) {
+              // Loop through all instances of the image field
+              $('.form-group.image').each(function(index){
 
-            .btn-file input[type=file] {
-                position: absolute;
-                top: 0;
-                right: 0;
-                min-width: 100%;
-                min-height: 100%;
-                font-size: 100px;
-                text-align: right;
-                filter: alpha(opacity=0);
-                opacity: 0;
-                outline: none;
-                background: white;
-                cursor: inherit;
-                display: block;
-            }
-        </style>
-    @endpush
+                  // Find DOM elements under this form-group element
+                  var $this      = $(this),
+                  $mainImage     = $this.find(".mainImage"),
+                  $uploadImage   = $this.find(".uploadImage"),
+                  $hiddenImage   = $this.find(".hiddenImage"),
+                  $rotateLeft    = $this.find(".rotateLeft"),
+                  $rotateRight   = $this.find(".rotateRight"),
+                  $zoomIn        = $this.find(".zoomIn"),
+                  $zoomOut       = $this.find(".zoomOut"),
+                  $reset         = $this.find(".reset"),
+                  $remove        = $this.find(".remove"),
+                  $canvas        = $this.find(".canvas-area"),
+                  $fileButton    = $this.find(".btn-file");
 
-    {{-- FIELD JS - will be loaded in the after_scripts section --}}
-    @push('crud_fields_scripts')
-        {{-- YOUR JS HERE --}}
-        <script src="{{ asset('vendor/backpack/cropper/dist/cropper.min.js') }}"></script>
-        <script>
+                  // Options either global for all image type fields, or use 'data-*' elements for options passed in via the CRUD controller
+                  var options = {
+                      viewMode        : 2,
+                      checkOrientation: false,
+                      autoCropArea    : 1,
+                      responsive      : true,
+                      preview         : $this.attr('data-preview'),
+                      aspectRatio     : $this.attr('data-aspectRatio')
+                  };
 
-            !function(a){"use strict";a.fn.blockui=a.fn.blockUI=function(){return this.addClass("block-ui-target block-ui-block"),this},a.fn.unblockui=a.fn.unblockUI=function(){return this.removeClass("block-ui-target block-ui-block"),this}}(window.jQuery);
+                  var crop = $(this).attr('data-crop');
 
-            jQuery(document).ready(function($) {
-                // Loop through all instances of the image field
-                $('.form-group.image').each(function(index){
+                  // Hide 'Remove' button if there is no image saved
+                  if (!$mainImage.attr('src')){
+                      $remove.hide();
+                  }
 
-                    // Find DOM elements under this form-group element
-                    var $this      = $(this),
-                    $mainImage     = $this.find(".mainImage"),
-                    $uploadImage   = $this.find(".uploadImage"),
-                    $hiddenImage   = $this.find(".hiddenImage"),
-                    $rotateLeft    = $this.find(".rotateLeft"),
-                    $rotateRight   = $this.find(".rotateRight"),
-                    $zoomIn        = $this.find(".zoomIn"),
-                    $zoomOut       = $this.find(".zoomOut"),
-                    $reset         = $this.find(".reset"),
-                    $remove        = $this.find(".remove"),
-                    $canvas        = $this.find(".canvas-area"),
-                    $fileButton    = $this.find(".btn-file");
+                  // Initialise hidden form input in case we submit with no change
+                  $hiddenImage.val($mainImage.attr('src'));
 
-                    // Options either global for all image type fields, or use 'data-*' elements for options passed in via the CRUD controller
-                    var options = {
-                        viewMode        : 2,
-                        checkOrientation: false,
-                        autoCropArea    : 1,
-                        responsive      : true,
-                        preview         : $this.attr('data-preview'),
-                        aspectRatio     : $this.attr('data-aspectRatio')
-                    };
+                  // Only initialize cropper plugin if crop is set to true
+                  if(crop){
 
-                    var crop = $(this).attr('data-crop');
+                      $remove.click(function() {
+                          $mainImage.cropper("destroy");
+                          $mainImage.attr('src','');
+                          $hiddenImage.val('');
+                          $rotateLeft.hide();
+                          $rotateRight.hide();
+                          $zoomIn.hide();
+                          $zoomOut.hide();
+                          $reset.hide();
+                          $remove.hide();
+                          $canvas.hide();
+                          $fileButton.addClass('dropdown-toggle');
+                      });
 
-                    // Hide 'Remove' button if there is no image saved
-                    if (!$mainImage.attr('src')){
-                        $remove.hide();
-                    }
+                  } else {
 
-                    // Initialise hidden form input in case we submit with no change
-                    $hiddenImage.val($mainImage.attr('src'));
+                      $remove.click(function() {
+                          $mainImage.attr('src','');
+                          $hiddenImage.val('');
+                          $remove.hide();
+                          $canvas.hide();
+                          $fileButton.addClass('dropdown-toggle');
+                      });
+                  }
 
-                    // Only initialize cropper plugin if crop is set to true
-                    if(crop){
+                  $uploadImage.change(function() {
 
-                        $remove.click(function() {
-                            $mainImage.cropper("destroy");
-                            $mainImage.attr('src','');
-                            $hiddenImage.val('');
-                            $rotateLeft.hide();
-                            $rotateRight.hide();
-                            $zoomIn.hide();
-                            $zoomOut.hide();
-                            $reset.hide();
-                            $remove.hide();
-                            $canvas.hide();
-                            $fileButton.addClass('dropdown-toggle');
-                        });
+                      $fileButton.blockui();
 
-                    } else {
+                      var fileReader = new FileReader(),
+                              files = this.files,
+                              file;
 
-                        $remove.click(function() {
-                            $mainImage.attr('src','');
-                            $hiddenImage.val('');
-                            $remove.hide();
-                            $canvas.hide();
-                            $fileButton.addClass('dropdown-toggle');
-                        });
-                    }
+                      if (!files.length) {
+                          $canvas.hide();
+                          $fileButton.addClass('dropdown-toggle').hide();
+                          $fileButton.unblockui();
+                          return;
+                      }
+                      file = files[0];
 
-                    $uploadImage.change(function() {
+                      if (/^image\/\w+$/.test(file.type)) {
 
-                        $fileButton.blockui();
+                          fileReader.readAsDataURL(file);
 
-                        var fileReader = new FileReader(),
-                                files = this.files,
-                                file;
+                          fileReader.onerror = function(){
+                              $fileButton.unblockui();
+                          }
 
-                        if (!files.length) {
-                            $canvas.hide();
-                            $fileButton.addClass('dropdown-toggle').hide();
-                            $fileButton.unblockui();
-                            return;
-                        }
-                        file = files[0];
+                          fileReader.onload = function () {
 
-                        if (/^image\/\w+$/.test(file.type)) {
+                              $uploadImage.val("");
 
-                            fileReader.readAsDataURL(file);
+                              if(crop){
 
-                            fileReader.onerror = function(){
-                                $fileButton.unblockui();
-                            }
+                                  $mainImage.cropper(options).cropper("reset", true).cropper("replace", this.result);
 
-                            fileReader.onload = function () {
+                                  // Override form submit to copy canvas to hidden input before submitting
+                                  $('form').submit(function() {
+                                      var imageURL = $mainImage.cropper('getCroppedCanvas').toDataURL();
+                                      $hiddenImage.val(imageURL);
+                                      return true; // return false to cancel form action
+                                  });
 
-                                $uploadImage.val("");
+                                  $rotateLeft.click(function() {
+                                      $mainImage.cropper("rotate", 90);
+                                  });
 
-                                if(crop){
+                                  $rotateRight.click(function() {
+                                      $mainImage.cropper("rotate", -90);
+                                  });
 
-                                    $mainImage.cropper(options).cropper("reset", true).cropper("replace", this.result);
+                                  $zoomIn.click(function() {
+                                      $mainImage.cropper("zoom", 0.1);
+                                  });
 
-                                    // Override form submit to copy canvas to hidden input before submitting
-                                    $('form').submit(function() {
-                                        var imageURL = $mainImage.cropper('getCroppedCanvas').toDataURL();
-                                        $hiddenImage.val(imageURL);
-                                        return true; // return false to cancel form action
-                                    });
+                                  $zoomOut.click(function() {
+                                      $mainImage.cropper("zoom", -0.1);
+                                  });
 
-                                    $rotateLeft.click(function() {
-                                        $mainImage.cropper("rotate", 90);
-                                    });
+                                  $reset.click(function() {
+                                      $mainImage.cropper("reset");
+                                  });
 
-                                    $rotateRight.click(function() {
-                                        $mainImage.cropper("rotate", -90);
-                                    });
+                                  $rotateLeft.show();
+                                  $rotateRight.show();
+                                  $zoomIn.show();
+                                  $zoomOut.show();
+                                  $reset.show();
+                                  $remove.show();
+                                  $canvas.show();
+                                  $fileButton.removeClass('dropdown-toggle').show();
 
-                                    $zoomIn.click(function() {
-                                        $mainImage.cropper("zoom", 0.1);
-                                    });
+                              } else {
+                                  $mainImage.attr('src',this.result);
+                                  $hiddenImage.val(this.result);
+                                  $remove.show();
+                                  $canvas.show();
+                                  $fileButton.removeClass('dropdown-toggle').show();
+                              }
 
-                                    $zoomOut.click(function() {
-                                        $mainImage.cropper("zoom", -0.1);
-                                    });
+                              $fileButton.unblockui();
+                          };
+                      } else {
+                          $fileButton.unblockui();
+                          alert("Please choose an image file.");
+                      }
+                  });
 
-                                    $reset.click(function() {
-                                        $mainImage.cropper("reset");
-                                    });
-
-                                    $rotateLeft.show();
-                                    $rotateRight.show();
-                                    $zoomIn.show();
-                                    $zoomOut.show();
-                                    $reset.show();
-                                    $remove.show();
-                                    $canvas.show();
-                                    $fileButton.removeClass('dropdown-toggle').show();
-
-                                } else {
-                                    $mainImage.attr('src',this.result);
-                                    $hiddenImage.val(this.result);
-                                    $remove.show();
-                                    $canvas.show();
-                                    $fileButton.removeClass('dropdown-toggle').show();
-                                }
-
-                                $fileButton.unblockui();
-                            };
-                        } else {
-                            $fileButton.unblockui();
-                            alert("Please choose an image file.");
-                        }
-                    });
-
-                });
-            });
-        </script>
+              });
+          });
+      </script>
 
 
-    @endpush
+  @endpush
 @endif
 {{-- End of Extra CSS and JS --}}
 {{-- ########################################## --}}
