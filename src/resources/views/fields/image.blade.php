@@ -1,4 +1,4 @@
-<div class="form-group col-md-12 image" data-preview="#{{ $field['name'] }}" data-aspectRatio="{{ isset($field['aspect_ratio'])?$field['aspect_ratio']:0 }}" data-crop="{{ isset($field['crop']) && $field['crop'] }}">
+<div class="form-group col-md-12 image" data-preview="#{{ $field['name'] }}" data-aspectRatio="{{ isset($field['aspect_ratio']) ? $field['aspect_ratio'] : 0 }}" data-crop="{{ isset($field['crop']) && $field['crop'] }}">
 
   <div>
       <label>{!! $field['label'] !!}</label>
@@ -125,6 +125,15 @@
                   $canvas        = $this.find(".canvas-area"),
                   $fileButton    = $this.find(".btn-file");
 
+                  //Calculate aspect ratio
+                  var aspectRatio = $this.attr('data-aspectRatio');
+                  aspectRatioSymbol = aspectRatio.indexOf('/') !== -1 ? '/' : ( aspectRatio.indexOf(':') !== -1 ? ':' : null );
+
+                  if( aspectRatioSymbol ){
+                      aspectRatio = aspectRatio.split( aspectRatioSymbol );
+                      aspectRatio = aspectRatio[0] / aspectRatio[1];
+                  }
+
                   // Options either global for all image type fields, or use 'data-*' elements for options passed in via the CRUD controller
                   var options = {
                       viewMode        : 2,
@@ -132,8 +141,10 @@
                       autoCropArea    : 1,
                       responsive      : true,
                       preview         : $this.attr('data-preview'),
-                      aspectRatio     : $this.attr('data-aspectRatio')
+                      aspectRatio     : aspectRatio
                   };
+
+                 console.log(options);
 
                   var crop = $(this).attr('data-crop');
 
