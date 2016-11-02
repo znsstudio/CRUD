@@ -272,8 +272,10 @@ trait CrudTrait
 
             // 3. but only if they have the ability to crop/handle images
             if (class_exists('\Intervention\Image\ImageManagerStatic')) {
-                $img = \Intervention\Image\ImageManagerStatic::make($file);
                 foreach ($variations as $variant => $dimensions) {
+
+                    $img = \Intervention\Image\ImageManagerStatic::make($file);
+
                     $variant_name = $new_file_name.'-'.$variant.'.'.$file->getClientOriginalExtension();
                     $variant_file = $destination_path.'/'.$variant_name;
 
@@ -303,7 +305,6 @@ trait CrudTrait
             // 3. Save the complete path to the database
             $this->attributes[$attribute_name] = $image_variations['original'];
         } elseif (starts_with($value, 'data:image')) {
-            $img = \Intervention\Image\ImageManagerStatic::make($value);
             $new_file_name = md5($value.time());
 
             if (! \Illuminate\Support\Facades\File::exists($disk_root.'/'.trim($destination_path, '/'))) {
@@ -311,6 +312,9 @@ trait CrudTrait
             }
 
             foreach ($variations as $variant => $dimensions) {
+
+                $img = \Intervention\Image\ImageManagerStatic::make($value);
+
                 switch ($img->mime()) {
                     case 'image/bmp':
                     case 'image/ief':
@@ -355,7 +359,7 @@ trait CrudTrait
                 }
             }
 
-            $this->attributes[$attribute_name] = $image_variations['original'];
+            return $this->attributes[$attribute_name] = $image_variations['original'];
         }
     }
 
