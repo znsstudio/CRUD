@@ -8,7 +8,7 @@
   <div class="canvas-area row" style="{{empty($field['value']) ? 'display: none;' : ''}}">
 
       <div class="col-sm-6" style="margin-bottom: 20px;">
-          <img class="mainImage" src="{{ !empty($field['value']) ? $entry->getUploadedImageFromDisk($field['name'], 'original', (isset($field['disk']) ? $field['disk'] : null)) : '' }}">
+          <img class="mainImage" src="{{ !empty($field['value']) ? $entry->getUploadedImageFromDisk($field['name'], 'original', (isset($field['disk']) ? $field['disk'] : 'public')) : '' }}">
       </div>
 
       @if(isset($field['crop']) && $field['crop'])

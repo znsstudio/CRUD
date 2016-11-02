@@ -370,7 +370,7 @@ trait CrudTrait
      */
     public function getUploadedImageFromDisk($attribute, $variant = 'original', $disk = null)
     {
-        $image = $this->attributes['image'];
+        $image = $this->attributes[$attribute];
         $url = null;
         if (! empty($image)) {
             $image_variant = str_replace('-original', '-'.$variant, $image);
