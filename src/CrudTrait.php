@@ -273,7 +273,6 @@ trait CrudTrait
             // 3. but only if they have the ability to crop/handle images
             if (class_exists('\Intervention\Image\ImageManagerStatic')) {
                 foreach ($variations as $variant => $dimensions) {
-
                     $img = \Intervention\Image\ImageManagerStatic::make($file);
 
                     $variant_name = $new_file_name.'-'.$variant.'.'.$file->getClientOriginalExtension();
@@ -312,7 +311,6 @@ trait CrudTrait
             }
 
             foreach ($variations as $variant => $dimensions) {
-
                 $img = \Intervention\Image\ImageManagerStatic::make($value);
 
                 switch ($img->mime()) {
